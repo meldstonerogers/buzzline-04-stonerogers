@@ -1,13 +1,16 @@
-# buzzline-04-case
+# buzzline-04-stonerogers
+Streaming Data, Project 4
+Melissa Stone Rogers, [GitHub](https://github.com/meldstonerogers/buzzline-04-stonerogers)
+
+## Introduction
+
+This is a professional project using matplotlib's animation capabilities to visualize streaming data. This project uses Apache Kafka to create uniquie JSON and CSV producers and consumers to simulate streaming data. Python Version 3.11.6 was used, as well as Git for version control. 
+This project was forked from Dr. Case's project repository found [here](https://github.com/denisecase/buzzline-04-case). Much of the detailed instructions in this README.md were borrowed from Dr. Case's project specifications, and updated for my machine.
+Commands were used on a Mac machine running zsh. 
 
 We can analyze and visualize different types of streaming data as the information arrives.
 
-The producers don't change from buzzline-03-case - they write the same information to a Kafka topic, except the csv producer for the smart smoker has been modified to not run continuously. It will stop after reading all the rows in the CSV file. 
-The consumers have been enhanced to add visualization. 
-
-This project uses matplotlib and its animation capabilities for visualization. 
-
-It generates three applications:
+This project generates three applications:
 
 1. A basic producer and consumer that exchange information via a dynamically updated file. 
 2. A JSON producer and consumer that exchange information via a Kafka topic. 
@@ -17,19 +20,14 @@ All three applications produce live charts to illustrate the data.
 
 ## Task 1. Use Tools from Module 1 and 2
 
-Before starting, ensure you have completed the setup tasks in <https://github.com/denisecase/buzzline-01-case> and <https://github.com/denisecase/buzzline-02-case> first. 
+Before starting, ensure you have first completed the setup tasks in [Project 1](https://github.com/denisecase/buzzline-01-case) and [Project 2](https://github.com/denisecase/buzzline-02-case), created by Dr. Case. 
 Python 3.11 is required. 
 
 ## Task 2. Copy This Example Project and Rename
 
-Once the tools are installed, copy/fork this project into your GitHub account
-and create your own version of this project to run and experiment with. 
+Once the tools are installed, copy/fork this project into your GitHub account and create your own version of this project to run and experiment with.
+Name it `buzzline-04-yourname` where yourname is something unique to you.
 Follow the instructions in [FORK-THIS-REPO.md](https://github.com/denisecase/buzzline-01-case/docs/FORK-THIS-REPO.md).
-
-OR: For more practice, add these example scripts or features to your earlier project. 
-You'll want to check requirements.txt, .env, and the consumers, producers, and util folders. 
-Use your README.md to record your workflow and commands. 
-    
 
 ## Task 3. Manage Local Project Virtual Environment
 
@@ -38,14 +36,54 @@ Follow the instructions in [MANAGE-VENV.md](https://github.com/denisecase/buzzli
 2. Activate .venv
 3. Install the required dependencies using requirements.txt.
 
+```zsh
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
+```zsh
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade -r requirements.txt
+
+```
+
+Remember, each time a new terminal is opened, activate the .venv. 
+```zsh
+source .venv/bin/activate
+```
+
+### Initial Project Commit 
+Turn on the autosave function in VS Code. Push changes to GitHub freqently to effectively track changes. Update the commit message to a meaningful note for your changes. 
+```zsh
+git add .
+git commit -m "initial"                         
+git push origin main
+```
+
 ## Task 4. Start Zookeeper and Kafka (2 Terminals)
 
 If Zookeeper and Kafka are not already running, you'll need to restart them.
 See instructions at [SETUP-KAFKA.md] to:
 
 1. Start Zookeeper Service ([link](https://github.com/denisecase/buzzline-02-case/blob/main/docs/SETUP-KAFKA.md#step-7-start-zookeeper-service-terminal-1))
+### Start Zookeeper Service (Terminal 1)
+
+```zsh
+cd ~/kafka
+chmod +x zookeeper-server-start.sh
+bin/zookeeper-server-start.sh config/zookeeper.properties
+```
+
+Keep this terminal open while working with Kafka.
+
 2. Start Kafka ([link](https://github.com/denisecase/buzzline-02-case/blob/main/docs/SETUP-KAFKA.md#step-8-start-kafka-terminal-2))
 
+### Start Kafka (Terminal 2)
+```zsh
+cd ~/kafka
+chmod +x kafka-server-start.sh
+bin/kafka-server-start.sh config/server.properties
+```
+Keep this terminal open while working with Kafka. 
 ---
 
 ## Task 5. Start a Basic (File-based, not Kafka) Streaming Application
@@ -62,14 +100,6 @@ Start the producer to generate the messages.
 In VS Code, open a NEW terminal.
 Use the commands below to activate .venv, and start the producer. 
 
-Windows:
-
-```shell
-.venv\Scripts\activate
-py -m producers.basic_json_producer_case
-```
-
-Mac/Linux:
 ```zsh
 source .venv/bin/activate
 python3 -m producers.basic_json_producer_case
@@ -82,13 +112,6 @@ Start the associated consumer that will process and visualize the messages.
 In VS Code, open a NEW terminal in your root project folder. 
 Use the commands below to activate .venv, and start the consumer. 
 
-Windows:
-```shell
-.venv\Scripts\activate
-py -m consumers.basic_json_consumer_case
-```
-
-Mac/Linux:
 ```zsh
 source .venv/bin/activate
 python3 -m consumers.basic_json_consumer_case
