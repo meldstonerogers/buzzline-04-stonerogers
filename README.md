@@ -117,75 +117,72 @@ source .venv/bin/activate
 python3 -m consumers.basic_json_consumer_case
 ```
 
-### Review the Application Code
-
-Review the code for both the producer and the consumer. 
-Understand how the information is generated, written to a file, and read and processed. 
-Review the visualization code to see how the live chart is produced. 
 When done, remember to kill the associated terminals for the producer and consumer. 
-
-
 ---
 
 ## Task 6. Start a (Kafka-based) JSON Streaming Application
 
 This will take two terminals:
 
-1. One to run the producer which writes to a Kafka topic. 
-2. Another to run the consumer which reads from that Kafka topic.
+1. One to run the producer which writes to a file in the data folder. 
+2. Another to run the consumer which reads from the dynamically updated file. 
 
-For each one, you will need to: 
-1. Open a new terminal. 
-2. Activate your .venv.
-3. Know the command that works on your machine to execute python (e.g. py or python3).
-4. Know how to use the -m (module flag to run your file as a module).
-5. Know the full name of the module you want to run. 
-   - Look in the producers folder for json_producer_case.
-   - Look in the consumers folder for json_consumer_case.
+### Producer Terminal
 
+Start the producer to generate the messages. 
 
-### Review the Application Code
+In VS Code, open a NEW terminal.
+Use the commands below to activate .venv, and start the producer. 
 
-Review the code for both the producer and the consumer. 
-Understand how the information is generated and written to a Kafka topic, and consumed from the topic and processed. 
-Review the visualization code to see how the live chart is produced. 
+```zsh
+source .venv/bin/activate
+python3 -m producers.json_producer_case
+```
 
-Compare the non-Kafka JSON streaming application to the Kafka JSON streaming application.
-By organizing code into reusable functions, which functions can be reused? 
-Which functions must be updated based on the sharing mechanism? 
-What new functions/features must be added to work with a Kafka-based streaming system?
+### Consumer Terminal
+
+Start the associated consumer that will process and visualize the messages. 
+
+In VS Code, open a NEW terminal in your root project folder. 
+Use the commands below to activate .venv, and start the consumer. 
+
+```zsh
+source .venv/bin/activate
+python3 -m consumers.json_consumer_case
+```
 
 When done, remember to kill the associated terminals for the producer and consumer. 
-
----
 
 ## Task 7. Start a (Kafka-based) CSV Streaming Application
 
 This will take two terminals:
 
-1. One to run the producer which writes to a Kafka topic. 
-2. Another to run the consumer which reads from that Kafka topic.
+1. One to run the producer which writes to a file in the data folder. 
+2. Another to run the consumer which reads from the dynamically updated file. 
 
-For each one, you will need to: 
-1. Open a new terminal. 
-2. Activate your .venv.
-3. Know the command that works on your machine to execute python (e.g. py or python3).
-4. Know how to use the -m (module flag to run your file as a module).
-5. Know the full name of the module you want to run. 
-   - Look in the producers folder for csv_producer_case.
-   - Look in the consumers folder for csv_consumer_case.
+### Producer Terminal
 
-### Review the Application Code
+Start the producer to generate the messages. 
 
-Review the code for both the producer and the consumer. 
-Understand how the information is generated and written to a Kafka topic, and consumed from the topic and processed. 
-Review the visualization code to see how the live chart is produced. 
+In VS Code, open a NEW terminal.
+Use the commands below to activate .venv, and start the producer. 
 
-Compare the JSON application to the CSV streaming application.
-By organizing code into reusable functions, which functions can be reused? 
-Which functions must be updated based on the type of data?
-How does the visualization code get changed based on the type of data and type of chart used?
-Which aspects are similar between the different types of data? 
+```zsh
+source .venv/bin/activate
+python3 -m producers.csv_producer_case
+```
+
+### Consumer Terminal
+
+Start the associated consumer that will process and visualize the messages. 
+
+In VS Code, open a NEW terminal in your root project folder. 
+Use the commands below to activate .venv, and start the consumer. 
+
+```zsh
+source .venv/bin/activate
+python3 -m consumers.csv_consumer_case
+```
 
 When done, remember to kill the associated terminals for the producer and consumer. 
 
