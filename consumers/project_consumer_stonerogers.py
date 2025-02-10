@@ -1,18 +1,3 @@
-"""
-json_consumer_case.py
-
-Consume json messages from a Kafka topic and visualize author counts in real-time.
-
-JSON is a set of key:value pairs. 
-
-Example serialized Kafka message
-"{\"message\": \"I love Python!\", \"author\": \"Eve\"}"
-
-Example JSON message (after deserialization) to be analyzed
-{"message": "I love Python!", "author": "Eve"}
-
-"""
-
 #####################################
 # Import Modules
 #####################################
@@ -20,7 +5,7 @@ Example JSON message (after deserialization) to be analyzed
 # Import packages from Python Standard Library
 import os
 import json  # handle JSON parsing
-from collections import defaultdict  # data structure for counting author occurrences
+from collections import defaultdict  # data structure for storing processed messages
 
 # Import external packages
 from dotenv import load_dotenv
@@ -34,6 +19,7 @@ import matplotlib.pyplot as plt
 # Import functions from local modules
 from utils.utils_consumer import create_kafka_consumer
 from utils.utils_logger import logger
+from textblob import TextBlob # tool for sentiment analysis 
 
 #####################################
 # Load Environment Variables
@@ -65,7 +51,8 @@ def get_kafka_consumer_group_id() -> str:
 #####################################
 
 # Initialize a dictionary to store author counts
-author_counts = defaultdict(int)
+# author_counts = defaultdict(int)
+message_sentiments = defaultdict(list)
 
 #####################################
 # Set up live visuals
@@ -86,40 +73,50 @@ plt.ion()
 # This will get called every time a new message is processed
 #####################################
 
-
 def update_chart():
-    """Update the live chart with the latest author counts."""
+    """Update the live chart with the latest sentiment analysis."""
     # Clear the previous chart
     ax.clear()
-
-    # Get the authors and counts from the dictionary
-    authors_list = list(author_counts.keys())
-    counts_list = list(author_counts.values())
-
-    # Create a bar chart using the bar() method.
-    # Pass in the x list, the y list, and the color
-    ax.bar(authors_list, counts_list, color="skyblue")
-
-    # Use the built-in axes methods to set the labels and title
-    ax.set_xlabel("Authors")
-    ax.set_ylabel("Message Counts")
-    ax.set_title("Real-Time Author Message Counts")
-
-    # Use the set_xticklabels() method to rotate the x-axis labels
-    # Pass in the x list, specify the rotation angle is 45 degrees,
-    # and align them to the right
-    # ha stands for horizontal alignment
-    ax.set_xticklabels(authors_list, rotation=45, ha="right")
-
-    # Use the tight_layout() method to automatically adjust the padding
-    plt.tight_layout()
-
+    
+    # Count occurrences of each sentiment category
+    sentiment_counts = {
+        "Positive": sum(1 for v in message_sentiments.values() if v > 0),
+        "Neutral": sum(1 for v in message_sentiments.values() if v == 0),
+        "Negative": sum(1 for v in message_sentiments.values() if v < 0)
+    }
+    
+    sentiment_labels = list(sentiment_counts.keys())
+    sentiment_values = list(sentiment_counts.values())
+    
+    # Define colors for each sentiment category
+    colors = ['green', 'gray', 'red']  # Adjust based on your sentiment categories
+    
+    # Create a pie chart
+    ax.pie(sentiment_values, labels=sentiment_labels, autopct='%1.1f%%', colors=colors, startangle=140)
+    
+    # Set the title
+    ax.set_title("Real-Time Sentiment Distribution")
+    
     # Draw the chart
     plt.draw()
-
+    
     # Pause briefly to allow some time for the chart to render
     plt.pause(0.01)
 
+#####################################
+# Sentiment Analysis Function
+#####################################
+
+def analyze_sentiment(message: str) -> float:
+    """
+    Analyze the sentiment of a given message using TextBlob.
+    Returns a sentiment polarity score between -1 (negative) and 1 (positive).
+    
+    Args:
+        message (str): The message whose sentiment is to be analyzed.
+    """
+    blob = TextBlob(message)
+    return blob.sentiment.polarity
 
 #####################################
 # Function to process a single message
@@ -128,41 +125,30 @@ def update_chart():
 
 def process_message(message: str) -> None:
     """
-    Process a single JSON message from Kafka and update the chart.
+    Process a single JSON message and update the chart.
 
     Args:
         message (str): The JSON message as a string.
     """
     try:
-        # Log the raw message for debugging
         logger.debug(f"Raw message: {message}")
-
-        # Parse the JSON string into a Python dictionary
-        message_dict: dict = json.loads(message)
-
-        # Ensure the processed JSON is logged for debugging
+        message_dict = json.loads(message)
         logger.info(f"Processed JSON message: {message_dict}")
 
-        # Ensure it's a dictionary before accessing fields
         if isinstance(message_dict, dict):
-            # Extract the 'author' field from the Python dictionary
             author = message_dict.get("author", "unknown")
+            message_text = message_dict.get("message", "")  # Corrected key
             logger.info(f"Message received from author: {author}")
 
-            # Increment the count for the author
-            author_counts[author] += 1
+            sentiment_score = analyze_sentiment(message_text)
+            logger.info(f"Sentiment score for message: {sentiment_score}")
 
-            # Log the updated counts
-            logger.info(f"Updated author counts: {dict(author_counts)}")
-
-            # Update the chart
+            # Store sentiment as a single value per author instead of a list
+            message_sentiments[author] = sentiment_score
             update_chart()
-
-            # Log the updated chart
             logger.info(f"Chart updated successfully for message: {message}")
         else:
             logger.error(f"Expected a dictionary but got: {type(message_dict)}")
-
     except json.JSONDecodeError:
         logger.error(f"Invalid JSON message: {message}")
     except Exception as e:

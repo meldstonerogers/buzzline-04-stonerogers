@@ -189,7 +189,7 @@ When done, remember to kill the associated terminals for the producer and consum
 
 ---
 ## Task 8. Custom Consumer File 
-This custom consumer file will use the existing json_producer_case.py producer file. The custom consumer will read from a Kafka topic and will focus on the sentiment of messages produced. A pie chart will be used to visualize the varying sentiment of messages. 
+This custom consumer file (project_consumer_stonerogrs.py) will use the existing json_producer_case.py producer file. The custom consumer will read from a Kafka topic and will focus on the sentiment of messages produced. A pie chart will be used to visualize the varying sentiment of messages. 
 
 This will take two terminals:
 
