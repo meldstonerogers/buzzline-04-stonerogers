@@ -10,13 +10,14 @@ Commands were used on a Mac machine running zsh.
 
 We can analyze and visualize different types of streaming data as the information arrives.
 
-This project generates three applications:
+This project generates four applications:
 
 1. A basic producer and consumer that exchange information via a dynamically updated file. 
 2. A JSON producer and consumer that exchange information via a Kafka topic. 
 3. A CSV producer and consumer that exchange information via a different Kafka topic. 
+4. A custom consumer that modifies existing code to visulize a specific insight (Task 8). 
 
-All three applications produce live charts to illustrate the data. 
+All four applications produce live charts to illustrate the data. 
 
 ## Task 1. Use Tools from Module 1 and 2
 
@@ -187,6 +188,41 @@ python3 -m consumers.csv_consumer_case
 When done, remember to kill the associated terminals for the producer and consumer. 
 
 ---
+## Task 8. Custom Consumer File 
+This custom consumer file will use the existing json_producer_case.py producer file. The custom consumer will read from a Kafka topic and will focus on the sentiment of messages produced. A pie chart will be used to visualize the varying sentiment of messages. 
+
+This will take two terminals:
+
+1. One to run the producer which writes to a file in the data folder. 
+2. Another to run the consumer which reads from the dynamically updated file. 
+
+### Producer Terminal
+
+Start the producer to generate the messages. 
+
+In VS Code, open a NEW terminal.
+Use the commands below to activate .venv, and start the producer. 
+
+```zsh
+source .venv/bin/activate
+python3 -m producers.json_producer_case
+```
+
+### Consumer Terminal
+
+Start the associated consumer that will process and visualize the messages. 
+
+In VS Code, open a NEW terminal in your root project folder. 
+Use the commands below to activate .venv, and start the consumer. 
+
+```zsh
+source .venv/bin/activate
+python3 -m consumers.project_consumer_stonerogers
+```
+
+When done, remember to kill the associated terminals for the producer and consumer. 
+
+---
 
 ## Possible Explorations
 
@@ -210,6 +246,14 @@ When resuming work on this project:
 To save disk space, you can delete the .venv folder when not actively working on this project.
 You can always recreate it, activate it, and reinstall the necessary packages later. 
 Managing Python virtual environments is a valuable skill. 
+
+### Final Project Commit 
+Insure all final changes are committed to GitHub.
+```zsh
+git add .
+git commit -m "final"                         
+git push origin main
+```
 
 ## License
 This project is licensed under the MIT License as an example project. 
